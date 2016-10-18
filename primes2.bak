@@ -1,7 +1,5 @@
-(define intBuilder
+(define intBuilder$
   (lambda(n)
-    (if (= n 1)
-      '()
       (append (intBuilder (- n 1)) (list n)))))
 
 (define filter
@@ -10,7 +8,7 @@
         '()
         (if (= (modulo (car lst) num) 0)
             (filter num (cdr lst))
-            (cons (car lst) lambda(nil) (filter num ((cdr lst))))))))
+            (cons (car lst) lambda() (filter num ((cdr lst))))))))
 
 (define sieve
   (lambda (lst)

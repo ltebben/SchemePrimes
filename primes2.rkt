@@ -1,37 +1,33 @@
-(define intBuilder
-  (lambda(n)
-    (if (= n 1)
-      '()
-      (append (intBuilder (- n 1)) (list n)))))
+(define intBuilder$
+  (lambda(n) 
+       (append (list n) (lambda () (intBuilder$ (+ n 1))))))
 
-(define filter
-  (lambda(num lst)
-    (if (null? lst)
+(define take$
+  (lambda (m s)
+    (if (or (= m 0) (null? s))
         '()
-        (if (= (modulo (car lst) num) 0)
-            (filter num (cdr lst))
-            (cons (car lst) lambda() (filter num ((cdr lst))))))))
+        (cons (car s) (take$ (- m 1) ((cdr s)))))))
 
-(define sieve
-  (lambda (lst)
-    (if (null? lst)
+(define filter$
+  (lambda(num s)
+    (if (null? s)
         '()
-        (cons (car lst) (sieve (filter (car lst) (cdr lst)))))))
+        (if (= (modulo (car s) num) 0)
+            (filter$ num ((cdr s)))
+            (cons (car s) (lambda() (filter$ num ((cdr s)))))))))
 
-(define primes
-  (lambda (n)
-    (sieve (intBuilder n))))
+(define sieve$
+  (lambda (s)
+    (if (null? s)
+        '()
+        (cons (car s) (lambda () (sieve$ (filter$ (car s) ((cdr s)))))))))
 
-(define stol
+
+(define stol$
   (lambda (m)
-    (let ((lst (primes (* m 20))))
-      (take m lst))))
+    (take$ m (sieve$ (intBuilder$ 2)))))
 
-(define take
-  (lambda (m lst)
-    (if (= m 0)
-        '()
-        (cons (car lst) (take (- m 1) (cdr lst))))))
+
    
 
 
